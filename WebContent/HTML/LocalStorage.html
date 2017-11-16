@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html ng-app="LocalApp">
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+<script type="text/javascript" src="../JScript/jquery-1.11.1.min.js"></script>
+<script type="text/javascript" src="../JScript/jquery-ui.js"></script>
+<script type="text/javascript" src="../JScript/angular.min.js"></script>
+<script type="text/javascript"
+	src="../JScript/AngularJS/LocalStorage.js"></script>
+<link rel="stylesheet" href="../CSS/jquery-ui.css">
+<link rel="stylesheet" href="../CSS/bootstrap.min.css">
+<link rel="stylesheet" href="../CSS/LocalStorage.css">
+
+
+</head>
+<body ng-controller="LocalController">
+
+	<div id="overAllDiv" class="container-fluid">
+
+		<div>
+			<div id="headerDiv" class="col-md-12">
+				<h1 id="local">Local Storage</h1>
+
+			</div>
+			<div id="contentsDiv" class="col-md-12">
+				<div id="addContactOvrall" class="col-md-4">
+					<div id="addHeader" class="col-md-12">
+						<h3 class="col-md-12">Registration</h3>
+					</div>
+					<div id="addContact" class="col-md-12">
+						<input type="submit" value="Clear LocalStorage" ng-click="clear()"
+							id="clear" class="btn btn-default">
+						<form action="" name="addcontact">
+							<table id="addTbl" class="col-md-11">
+								<tr>
+									<td><label id="lbel">First Name :</label></td>
+									<td><input type="text" id="fname" ng-model="bind.fname"
+										ng-minlength="3" ng-maxlength="15" placeholder="First Name"
+										required class="form-control"></td>
+								</tr>
+								<tr>
+									<td><label id="lbel">Last Name :</label></td>
+									<td><input type="text" id="lname" class="form-control"
+										ng-minlength="3" ng-maxlength="15" ng-model="bind.lname"
+										placeholder="Last Name" required></td>
+								</tr>
+								<tr>
+									<td><label id="lbel">Email :</label></td>
+									<td><input type="email" id="email" class="form-control"
+										ng-model="bind.email" placeholder="Email" required></td>
+								</tr>
+								<tr>
+									<td><label id="lbel">Phone :</label></td>
+									<td id="phoneColumn"><input type="tel" id="phone"
+										class="form-control" ng-pattern="/^\d+$/" ng-minlength="10"
+										ng-maxlength="10" ng-model="bind.telephone"
+										placeholder="Phone" required></td>
+								</tr>
+								<tr>
+									<td><label id="lbel">Address :</label></td>
+									<td><textarea type="text" id="address"
+											class="form-control" ng-minlength="5" ng-maxlength="55"
+											ng-model="bind.address" placeholder="Address" required>
+											</textarea></td>
+								</tr>
+								<tr>
+									<td></td>
+									<td><input type="submit" value="Add Contact"
+										ng-click="save(bind)" id="submit" class="btn btn-default"
+										ng-disabled="addcontact.$invalid"></td>
+								</tr>
+
+							</table>
+						</form>
+					</div>
+				</div>
+				<div id="users" class="col-md-4">
+					<div id="userHeader" class="col-md-12">
+						<h3>Contacts</h3>
+					</div>
+
+					<div id="userContent">
+						<div id="SearchOperation" class="col-md-12">
+							<div class="col-md-3" id="chechOperation">
+								<input type="checkbox" id="checkAll" ng-model="checkedAll"
+									ng-click="checkall(checkedAll)">
+								<button id="deletAllBtn" title="Delete Selected"
+									ng-click="deleteSelected(checkedAll)"></button>
+
+							</div>
+							<div class="col-md-10">
+								<input type="search" placeholder="Search Here" ng-model="Search"
+									id="searchBox" class="form-control">
+							</div>
+						</div>
+
+
+						<div id="userDisplay">
+
+							<div ng-repeat="details in List  | filter:Search track by $index"
+								ng-if="details != null" id="userList">
+
+								<div style="width: 20%">
+									<div id="selectCheck">
+										<input type="checkbox" id="checkOne"
+											ng-model="details.checkbox"
+											ng-click="checked(details.checkbox,$index)">
+									</div>
+								</div>
+								<div style="width: 80%; display: flex;">
+									<div id="userImg"></div>
+
+									<p id="paraFname" ng-click="profileView(details)">{{details.firstname}}
+									</p>
+								</div>
+
+								<div style="width: 25%">
+									<div id="userOperaters">
+
+										<button id="editImag" title="Edit"
+											ng-click="edit(details,$index)"></button>
+										<button id="deletImag" title="Delete" ng-click="delet($index)"></button>
+									</div>
+								</div>
+
+							</div>
+						</div>
+					</div>
+
+				</div>
+				<div id="userDetails" class="col-md-4">
+					<div id="userDetailsHeader">
+						<h3>Contact Details</h3>
+					</div>
+
+					<div id="profileContent" ng-if="profile != null " class="col-md-12">
+
+						<div id="contactHead" class="col-md-12">
+							<div id="picProfileView" class="col-md-3"></div>
+							<h4 class="col-md-9">{{profile.firstname}}
+								{{profile.lastname}}</h4>
+						</div>
+
+						<div class="col-md-12" id="tableDiv">
+							<table id="profileViewTable">
+
+								<tr>
+									<td><label id="labels">Email :</label></td>
+									<td id="content">{{profile.email}}</td>
+								</tr>
+								<tr>
+									<td><label id="labels">Phone :</label></td>
+									<td id="content">{{profile.number}}</td>
+								</tr>
+								<tr>
+									<td><label id="labels">Address :</label></td>
+									<td id="content">{{profile.address}}</td>
+								</tr>
+							</table>
+
+						</div>
+
+
+					</div>
+					<div id="defaultScreen" ng-if="profile == null " class="col-md-12">
+						<figure class="text-center" id="figur">
+							<img alt="" src="../Images/dispImg.png" alt="The Pulpit Rock"
+								height="250" width="250">
+							<figcaption>
+								<b id="imgText">Please Select The Contact to Display</b>
+							</figcaption>
+						</figure>
+					</div>
+				</div>
+			</div>
+
+			<!-- Dialog Box -->
+
+			<div id="editDialogueBox" title="Edit Box">
+				<form name="editForm">
+					<!-- class="form-group" -->
+					<table id="editDialogTable">
+
+						<tr>
+							<td><label id="label">First Name :</label></td>
+							<td><input type="text" id="textbox"
+								class="editFname form-control" value="{{editThis.firstname}}"
+								placeholder="First Name" readonly="true"></td>
+						</tr>
+
+						<tr>
+							<td><label id="label">Last Name :</label></td>
+							<td><input type="text" id="textbox"
+								class="editLname form-control" value="{{editThis.lastname}}"
+								placeholder="Last Name" readonly="true"></td>
+						</tr>
+
+						<tr>
+							<td><label id="label">Email :</label></td>
+							<td><input type="email" class="form-control" id="textbox"
+								ng-model="editThis.email" class="editEmail form-control"
+								 placeholder="Email" required></td>
+						</tr>
+
+						<tr>
+							<td><label id="label">Phone :</label></td>
+							<td><input type="tel" id="textbox" class="form-control"
+								ng-model="editThis.number" class="editPhone form-control"
+								ng-minlength="10" ng-maxlength="10" placeholder="Phone" required></td>
+						</tr>
+
+						<tr>
+							<td><label id="label">Address :</label></td>
+							<td><textarea type="text" id="textbox" class="form-control"
+									ng-model="editThis.address" class="editAddress form-control"
+									ng-minlength="5" ng-maxlength="32" placeholder="Address"
+									required>
+								</textarea></td>
+						</tr>
+						<tr>
+							<td><input type="text" class="editSerial"
+								style="display: none;" value="{{editThis.serial}}" required></td>
+							<td><div id="contentDiv">
+									<input type="submit" value="Update" class="btn btn-default"
+										ng-click="updat(editThis,$index)" id="update"
+										ng-disabled="editForm.$invalid">
+								</div></td>
+						</tr>
+
+					</table>
+				</form>
+
+			</div>
+
+			<!-- Delete Dialog -->
+
+			<div id="deleteDialogueBox" title="Delete Box" id="deleteDialogueBox">
+				<p id="deleteDialoguePara">Sure You Want To Delete ?</p>
+				<div id="options">
+					<input type="submit" id="Yes" value="Yes" ng-click="sureDelet()">
+					<input id="no" type="submit" value="No" ng-click="noDelet()">
+				</div>
+			</div>
+
+
+		</div>
+	</div>
+
+</body>
+</html>
